@@ -9,6 +9,7 @@ import SwiftUI
 
 struct HomeView: View {
     @State private var searchText = ""
+    @StateObject private var viewmodel = HomeViewModel()
     
     var body: some View {
         ScrollView(showsIndicators: false) {
@@ -20,15 +21,15 @@ struct HomeView: View {
                 SearchBar(searchText: $searchText)
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack {
-                        ForEach(1..<5, id: \.self) { _ in
-                            MovieCard(movie: DeveloperPreview.instance.movie)
+                        ForEach(viewmodel.trendingMovies) { movie in
+                            MovieCard(movie: movie)
                         }
                     }
                    
                 }
                 LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())]) {
-                    ForEach(1..<10, id: \.self){ _ in
-                        MovieCard(movie: DeveloperPreview.instance.movie, type: .grid)}
+                    ForEach(viewmodel.topRatedMovies){ movie in
+                        MovieCard(movie: movie, type: .grid)}
                 }
               
             }
@@ -36,6 +37,10 @@ struct HomeView: View {
         .preferredColorScheme(.dark)
         .padding()
         .background(Color.background)
+        .task {
+            await viewmodel.fetchTrendingMovies()
+            await viewmodel.fetchTopRatedMovies()
+        }
     }
 }
 
