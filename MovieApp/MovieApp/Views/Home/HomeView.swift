@@ -10,6 +10,8 @@ import SwiftUI
 struct HomeView: View {
     @State private var searchText = ""
     @StateObject private var viewmodel = HomeViewModel()
+    @Namespace var namespace
+    
     
     var body: some View {
         ScrollView(showsIndicators: false) {
@@ -17,6 +19,7 @@ struct HomeView: View {
                 Text("Movie App")
                     .font(.largeTitle)
                     .bold()
+                
                 
                 SearchBar(searchText: $searchText)
                 ScrollView(.horizontal, showsIndicators: false) {
@@ -27,8 +30,27 @@ struct HomeView: View {
                     }
                    
                 }
+                
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack {
+                        ForEach(viewmodel.genreMovies) { genre in
+                            GenreCard(genre: genre, namespace: namespace, selectedGenre: $viewmodel.selectedGenre)
+                                .onTapGesture {
+                                    withAnimation(.smooth) {
+                                        viewmodel.selectedGenre = genre
+                                            Task {
+                                            await viewmodel.fetchMoviesByGenre()
+                                        }
+                                    }
+                                    
+                                }
+                        }
+                    }
+                   
+                }
+                
                 LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())]) {
-                    ForEach(viewmodel.topRatedMovies){ movie in
+                    ForEach(viewmodel.moviesByGenre){ movie in
                         MovieCard(movie: movie, type: .grid)}
                 }
               
@@ -40,6 +62,8 @@ struct HomeView: View {
         .task {
             await viewmodel.fetchTrendingMovies()
             await viewmodel.fetchTopRatedMovies()
+            await viewmodel.fetchGenreMovies()
+            await viewmodel.fetchMoviesByGenre()
         }
     }
 }

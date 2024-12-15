@@ -23,13 +23,14 @@ struct MovieResponse: Codable {
 // MARK: - Movie
 struct Movie: Codable, Identifiable {
     let adult: Bool
-    let backdropPath: String
+    let backdropPath: String?
     let genreIDS: [Int]
     let id: Int
     let originalLanguage: String
     let originalTitle, overview: String
     let popularity: Double
-    let posterPath, releaseDate, title: String
+    let posterPath : String?
+    let releaseDate, title: String
     let video: Bool
     let voteAverage: Double
     let voteCount: Int
@@ -52,6 +53,6 @@ struct Movie: Codable, Identifiable {
 
 extension Movie {
     var imageUrlString : String {
-        Constants.imageBaseURL + posterPath
+        Constants.imageBaseURL + posterPath!
     }
 }
