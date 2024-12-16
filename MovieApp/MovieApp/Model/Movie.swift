@@ -55,4 +55,8 @@ extension Movie {
     var imageUrlString : String {
         Constants.imageBaseURL + posterPath!
     }
+    
+    var imageUrlBackdrop : String {
+        Constants.imageBaseURL + backdropPath!
+    }
 }
