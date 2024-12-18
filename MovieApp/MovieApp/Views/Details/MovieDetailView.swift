@@ -23,15 +23,21 @@ struct MovieDetailView: View {
     }
     
     var body: some View {
-        VStack(alignment: .leading) {
-            headerSection
-            Spacer()
-            infoSection
-                .padding()
-                .padding(.top, contentOffset)
+        ScrollView {
+            VStack(alignment: .leading) {
+                headerSection
+                Spacer()
+                infoSection
+                    .padding()
+                    .padding(.top, contentOffset)
+            }
+            .preferredColorScheme(.dark)
+            .background(Color.background)
+            .task {
+                await viewModel.fetchReviews()
+            }
         }
-        .preferredColorScheme(.dark)
-        .background(Color.background)
+        .background(Color.background.ignoresSafeArea())
     }
     
     private var headerSection: some View {
@@ -76,6 +82,7 @@ struct MovieDetailView: View {
         VStack {
             movieInfo
             sectionTabs
+            showContent()
             Spacer()
         }
     }
@@ -102,7 +109,25 @@ struct MovieDetailView: View {
                     }
             }
         }
+        
     }
+    
+    private func showContent() -> some View {
+        Group {
+            switch viewModel.selectedSection {
+            case .about:
+                Text(viewModel.movie.overview)
+            case .review:
+                ForEach(viewModel.reviews) { review in
+                    ReviewCard(review: review)
+                }
+            case .cast:
+                Text("cast")
+            }
+        }
+        .transition(.opacity)
+    }
+
     
     private func iconText(icon: String, text: String) -> some View {
         HStack {
@@ -118,7 +143,7 @@ struct MovieDetailView: View {
     }
     
     private var posterImageHeight: CGFloat {
-        screenHeight * 0.50
+        screenHeight * 0.45
     }
     
     private var backdropImageHeight: CGFloat {
@@ -126,7 +151,7 @@ struct MovieDetailView: View {
     }
     
     private var backdropImageOffset: CGFloat {
-        screenHeight * 0.25
+        screenHeight * 0.22
     }
     
     private var titleOffset: CGFloat {
