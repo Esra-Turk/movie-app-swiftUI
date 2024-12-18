@@ -16,46 +16,41 @@ struct HomeView: View {
     var body: some View {
         ScrollView(showsIndicators: false) {
             LazyVStack(alignment: .leading, spacing: 20) {
-                Text("Movie App")
-                    .font(.largeTitle)
-                    .bold()
-                
-                
+                HeaderView(title: "Movie App", size: 35)
                 SearchBar(searchText: $searchText)
-                ScrollView(.horizontal, showsIndicators: false) {
-                    HStack {
-                        ForEach(viewmodel.trendingMovies) { movie in
-                            MovieCard(movie: movie)
-                                .onTapGesture {
-                                    viewmodel.selectedMovie = movie
-                                }
+                
+                HeaderView(title: "Trending", size: 18)
+                HScrollView(items: viewmodel.trendingMovies) { movie in
+                    MovieCard(movie: movie)
+                        .onTapGesture {
+                            viewmodel.selectedMovie = movie
                         }
-                    }
-                   
                 }
                 
-                ScrollView(.horizontal, showsIndicators: false) {
-                    HStack {
-                        ForEach(viewmodel.genreMovies) { genre in
-                            GenreCard(genre: genre, namespace: namespace, selectedGenre: $viewmodel.selectedGenre)
-                                .onTapGesture {
-                                    withAnimation(.smooth) {
-                                        viewmodel.selectedGenre = genre
-                                            Task {
-                                            await viewmodel.fetchMoviesByGenre()
-                                        }
-                                    }
-                                    
-                                }
+                HeaderView(title: "Top Rated", size: 18)
+                HScrollView(items: viewmodel.topRatedMovies) { movie in
+                    MovieCard(movie: movie)
+                        .onTapGesture {
+                            viewmodel.selectedMovie = movie
                         }
-                    }
-                   
                 }
                 
-                LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())]) {
-                    ForEach(viewmodel.moviesByGenre){ movie in
-                        MovieCard(movie: movie, type: .grid)}
+                HeaderView(title: "Now Playing", size: 18)
+                HScrollView(items: viewmodel.nowPlayingMovies) { movie in
+                    MovieCard(movie: movie)
+                        .onTapGesture {
+                            viewmodel.selectedMovie = movie
+                        }
                 }
+                
+                HScrollView(items: viewmodel.genreMovies) { genre in
+                    GenreCard(genre: genre, namespace: namespace, selectedGenre: $viewmodel.selectedGenre)
+                        .onTapGesture {
+                            handleGenreSelection(genre)
+                        }
+                }
+                
+                MovieGridView(movies: viewmodel.moviesByGenre)
               
             }
         }
@@ -66,11 +61,25 @@ struct HomeView: View {
             MovieDetailView(movie: movie)
         })
         .task {
-            await viewmodel.fetchTrendingMovies()
-            await viewmodel.fetchTopRatedMovies()
-            await viewmodel.fetchGenreMovies()
-            await viewmodel.fetchMoviesByGenre()
+            await loadData()
         }
+    }
+    
+    private func handleGenreSelection(_ genre: Genre) {
+        withAnimation(.smooth) {
+            viewmodel.selectedGenre = genre
+            Task {
+                await viewmodel.fetchMoviesByGenre()
+            }
+        }
+    }
+    
+    private func loadData() async {
+        await viewmodel.fetchTrendingMovies()
+        await viewmodel.fetchTopRatedMovies()
+        await viewmodel.fetchNowPlayingMovies()
+        await viewmodel.fetchGenreMovies()
+        await viewmodel.fetchMoviesByGenre()
     }
 }
 
