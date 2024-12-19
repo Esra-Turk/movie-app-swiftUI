@@ -57,12 +57,17 @@ extension Review {
     }
     
     var authorImage : String {
-        var image = authorDetails?.avatarPath ?? ""
-        if image.starts(with: "/") {
-            image = String(image.dropFirst())
+        guard let imagePath = authorDetails?.avatarPath, !imagePath.isEmpty else {
+            return ""
         }
         
-        return image
+        if imagePath.starts(with: "/https://") {
+            return String(imagePath.dropFirst())
+        } else if imagePath.starts(with: "/") {
+            return Constants.avatarBaseURL + imagePath
+        }
+        
+        return ""
     }
 }
 
