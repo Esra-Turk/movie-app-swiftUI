@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Kingfisher
 
 struct CustomImageView: View {
     let movie: Movie
@@ -24,21 +25,20 @@ struct CustomImageView: View {
             }
         }()
         
-        AsyncImage(url: URL(string: imageUrl!)) { image in
-            image
-                .resizable()
-                .scaledToFill()
-            
-            
-        } placeholder: {
-            ZStack {
-                Color.gray
-                Text(movie.title)
-                    .padding()
+        KFImage(URL(string: imageUrl!))
+            .placeholder {
+                ZStack {
+                    Color.gray
+                    Text(movie.title)
+                        .foregroundColor(.white)
+                        .multilineTextAlignment(.center)
+                        .padding()
+                }
             }
-        }
-        .frame(width: itemWidth, height: itemHeight)
-        .clipShape(RoundedRectangle(cornerRadius: 20))
+            .resizable()
+            .scaledToFill()
+            .frame(width: itemWidth, height: itemHeight)
+            .clipShape(RoundedRectangle(cornerRadius: 20))
     }
 }
 
