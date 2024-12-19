@@ -50,7 +50,16 @@ struct HomeView: View {
                         }
                 }
                 
-                MovieGridView(movies: viewmodel.moviesByGenre)
+                //MovieGridView(movies: viewmodel.moviesByGenre)
+                
+                MovieGridView(items: viewmodel.moviesByGenre) { movie in
+                    MovieCard(movie: movie, type: .grid)
+                        .onTapGesture {
+                            viewmodel.selectedMovie = movie
+                        }
+                }
+                
+               
               
             }
         }

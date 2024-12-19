@@ -7,16 +7,15 @@
 
 import SwiftUI
 
-struct MovieGridView: View {
-    var movies: [Movie]
+struct MovieGridView<Item: Identifiable, Content: View>: View {
+    var items: [Item]
+    var content: (Item) -> Content
 
     private let columns = [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())]
 
     var body: some View {
         LazyVGrid(columns: columns, spacing: 20) {
-            ForEach(movies) { movie in
-                MovieCard(movie: movie, type: .grid)
-            }
+            ForEach(items, content: content)
         }
     }
 }
