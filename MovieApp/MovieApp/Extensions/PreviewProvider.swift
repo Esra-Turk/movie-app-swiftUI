@@ -11,7 +11,7 @@ class DeveloperPreview {
     static let instance = DeveloperPreview()
     private init() {}
     
-    let movie = Movie(adult: false, backdropPath: "/3V4kLQg0kSqPLctI5ziYWabAZYF.jpg", genreIDS: [1], id: 912649, originalLanguage: "", originalTitle: "", overview: "", popularity: 10.0, posterPath: "/aosm8NMQ3UyoBVpSxyimorCQykC.jpg", releaseDate: "", title: "Venom: The Last Dance", video: false, voteAverage: 10.0, voteCount: 1)
+    let movie = Movie(adult: false, backdropPath: "/3V4kLQg0kSqPLctI5ziYWabAZYF.jpg", genreIDS: [1], id: 912649, originalLanguage: "", originalTitle: "", overview: "", popularity: 10.0, posterPath: "/aosm8NMQ3UyoBVpSxyimorCQykC.jpg", releaseDate: "2024-10-25", title: "Venom: The Last Dance", video: false, voteAverage: 10.0, voteCount: 1)
     
     let genre = Genre(id: 28, name: "Action")
     let authorDetail = AuthorDetails(name: "", username: "Goddard", avatarPath: "/https://secure.gravatar.com/avatar/f248ec34f953bc62cafcbdd81fddd6b6.jpg", rating: nil)

@@ -59,4 +59,14 @@ extension Movie {
     var imageUrlBackdrop : String {
         Constants.imageBaseURL + backdropPath!
     }
+    
+    var releaseYear : String {
+        String(releaseDate.split(separator: "-").first!)
+    }
+    
+    var voteMovie : String {
+        let rounded = String(format: "%.1f", voteAverage)
+        return rounded
+    }
+
 }

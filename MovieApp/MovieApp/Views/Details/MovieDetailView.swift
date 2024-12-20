@@ -17,6 +17,7 @@ struct MovieDetailView: View {
     @StateObject private var viewModel: DetailsViewModel
     @Environment(\.presentationMode) var presentationMode
     @Namespace private var namespace
+    @State private var isLiked: Bool = false
     
     init(movie: Movie) {
         _viewModel = StateObject(wrappedValue: DetailsViewModel(movie: movie))
@@ -35,6 +36,7 @@ struct MovieDetailView: View {
             .background(Color.background)
             .task {
                 await viewModel.fetchReviews()
+                await viewModel.getMovieFirstGenre()
             }
         }
         .background(Color.background.ignoresSafeArea())
@@ -45,11 +47,29 @@ struct MovieDetailView: View {
             ZStack(alignment: .top) {
                 CustomImageView(movie: viewModel.movie, itemWidth: screenWidth, itemHeight: posterImageHeight)
                 topBar
+                playButton
             }
             movieTitleSection
                 .padding()
                 .offset(y: backdropImageOffset)
         }
+    }
+    
+    private var playButton : some View {
+        Button(action: {
+           //action
+            
+        }) {
+            Image("play")
+                .resizable()
+                .frame(width: 80, height: 80)
+                .padding()
+        }
+        .frame(
+            width: screenWidth,
+            height: posterImageHeight,
+            alignment: .center
+        )
     }
     
     private var topBar: some View {
@@ -61,7 +81,15 @@ struct MovieDetailView: View {
             Spacer()
             Text("Detail")
             Spacer()
-            Image("BookmarkIcon")
+            Button(action: {
+                isLiked.toggle()
+            }) {
+                Image(systemName: isLiked ? "heart.fill" : "heart")
+                    .resizable()
+                    .frame(width: 22, height: 20)
+                    .foregroundStyle(isLiked ? .red : .white)
+                    
+            }
         }
         .padding()
         .background(Color.background)
@@ -89,11 +117,11 @@ struct MovieDetailView: View {
     
     private var movieInfo: some View {
         HStack {
-            iconText(icon: "CalendarIcon", text: "2023")
+            iconText(icon: "CalendarIcon", text: viewModel.movie.releaseYear)
             separator
-            iconText(icon: "ClockIcon", text: "160 minutes")
+            iconText(icon: "Star", text: "\(viewModel.movie.voteMovie) (IMDb)")
             separator
-            iconText(icon: "GenreIcon", text: "Action")
+            iconText(icon: "GenreIcon", text: viewModel.movieGenre?.name ?? "No genre")
         }
         .frame(maxWidth: .infinity)
     }

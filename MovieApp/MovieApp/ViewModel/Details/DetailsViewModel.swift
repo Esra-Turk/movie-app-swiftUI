@@ -13,7 +13,9 @@ class DetailsViewModel : ObservableObject {
     let sections : [DetailViewSection] = [.about,.review, .cast]
     @Published var selectedSection : DetailViewSection = .about
     @Published var reviews : [Review] = []
-    
+    @Published var genres : [Genre] = []
+    @Published var movieGenre : Genre?
+   
     private let movieService = MovieService()
     
     init(movie: Movie) {
@@ -27,5 +29,20 @@ class DetailsViewModel : ObservableObject {
         } catch {
             print("Error : \(error.localizedDescription)")
         }
+    }
+    
+    func getMovieFirstGenre() async {
+        do {
+            let response : GenreResponse = try await movieService.fetchData(api: ApiConstructor(endpoint: .genre))
+            genres = response.genres
+            
+            if let firstID = movie.genreIDS.first {
+                movieGenre = genres.first(where: { $0.id == firstID })
+            }
+            
+        } catch {
+            print("Error : \(error.localizedDescription)")
+        }
+        
     }
 }
