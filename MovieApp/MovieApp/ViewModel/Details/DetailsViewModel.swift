@@ -15,6 +15,7 @@ class DetailsViewModel : ObservableObject {
     @Published var reviews : [Review] = []
     @Published var genres : [Genre] = []
     @Published var movieGenre : Genre?
+    @Published var movieVideo: [Video] = []
    
     private let movieService = MovieService()
     
@@ -45,4 +46,29 @@ class DetailsViewModel : ObservableObject {
         }
         
     }
+    
+    func getMovieVideo() async {
+        do {
+             let response: VideoResponse = try await movieService.fetchData(api: ApiConstructor(endpoint: .watchTrailer(movie.id)))
+             movieVideo = response.results
+         } catch {
+             print(String(describing: error))
+           
+         }
+    }
 }
+
+extension DetailsViewModel {
+    static let preferredTypes: [TypeEnum] = [.trailer, .teaser, .featurette, .clip]
+    
+    func getVideoURL() -> URL? {
+        for type in DetailsViewModel.preferredTypes {
+            if let video = movieVideo.first(where: { $0.type == type }) {
+                return video.youtubeURL
+            }
+        }
+        
+        return nil
+    }
+}
+

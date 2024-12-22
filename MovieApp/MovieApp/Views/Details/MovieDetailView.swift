@@ -16,6 +16,7 @@ enum DetailViewSection: String {
 struct MovieDetailView: View {
     @StateObject private var viewModel: DetailsViewModel
     @Environment(\.presentationMode) var presentationMode
+    @Environment(\.openURL) var openURL
     @Namespace private var namespace
     @State private var isLiked: Bool = false
     
@@ -37,6 +38,7 @@ struct MovieDetailView: View {
             .task {
                 await viewModel.fetchReviews()
                 await viewModel.getMovieFirstGenre()
+                await viewModel.getMovieVideo()
             }
         }
         .background(Color.background.ignoresSafeArea())
@@ -56,9 +58,9 @@ struct MovieDetailView: View {
     }
     
     private var playButton : some View {
-        Button(action: {
-           //action
-            
+        if let videoURL = viewModel.getVideoURL() {
+            return AnyView(Button(action: {
+                openURL(videoURL)
         }) {
             Image("play")
                 .resizable()
@@ -69,7 +71,12 @@ struct MovieDetailView: View {
             width: screenWidth,
             height: posterImageHeight,
             alignment: .center
-        )
+        ))
+            
+        } else {
+            //if there is no video remove play button
+            return AnyView(EmptyView())
+        }
     }
     
     private var topBar: some View {
