@@ -18,6 +18,6 @@ class DeveloperPreview {
     
     lazy var review = Review(author: "Goddard", authorDetails: authorDetail, content: "Pretty awesome movie.  It shows what one crazy person can convince other crazy people to do.  Everyone needs something to believe in.  I recommend Jesus Christ, but they want Tyler Durden.", createdAt: "2018-06-09T17:51:53.359Z", id: "5b1c13b9c3a36848f2026384", updatedAt: "2021-06-23T15:58:09.421Z", url: "https://www.themoviedb.org/review/5b1c13b9c3a36848f2026384")
     
-
+    let cast = Cast(id: 2524, name: "Tom Hardy", character: "Eddie Brock / Venom", profilePath: "/d81K0RH8UX7tZj49tZaQhZ9ewH.jpg", popularity: 22.2)
 
 }

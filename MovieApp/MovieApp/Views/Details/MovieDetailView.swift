@@ -39,6 +39,7 @@ struct MovieDetailView: View {
                 await viewModel.fetchReviews()
                 await viewModel.getMovieFirstGenre()
                 await viewModel.getMovieVideo()
+                await viewModel.getMovieCast()
             }
         }
         .background(Color.background.ignoresSafeArea())
@@ -157,7 +158,9 @@ struct MovieDetailView: View {
                     ReviewCard(review: review)
                 }
             case .cast:
-                Text("cast")
+                HScrollView(items: viewModel.cast) { cast in
+                    CastCard(cast: cast)
+                }
             }
         }
         .transition(.opacity)

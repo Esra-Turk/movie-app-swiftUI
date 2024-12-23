@@ -16,6 +16,7 @@ class DetailsViewModel : ObservableObject {
     @Published var genres : [Genre] = []
     @Published var movieGenre : Genre?
     @Published var movieVideo: [Video] = []
+    @Published var cast : [Cast] = []
    
     private let movieService = MovieService()
     
@@ -55,6 +56,15 @@ class DetailsViewModel : ObservableObject {
              print(String(describing: error))
            
          }
+    }
+    
+    func getMovieCast() async {
+        do {
+            let response : CastResponse = try await movieService.fetchData(api: ApiConstructor(endpoint: .movieCredits(movie.id)))
+            cast = response.cast
+        } catch {
+            print("Error : \(error.localizedDescription)")
+        }
     }
 }
 
