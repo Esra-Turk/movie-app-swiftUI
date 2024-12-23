@@ -11,6 +11,7 @@ enum DetailViewSection: String {
     case about = "About"
     case review = "Reviews"
     case cast = "Cast"
+    case similar = "Similar"
 }
 
 struct MovieDetailView: View {
@@ -40,6 +41,7 @@ struct MovieDetailView: View {
                 await viewModel.getMovieFirstGenre()
                 await viewModel.getMovieVideo()
                 await viewModel.getMovieCast()
+                await viewModel.getSimilarMovies()
             }
         }
         .background(Color.background.ignoresSafeArea())
@@ -160,6 +162,10 @@ struct MovieDetailView: View {
             case .cast:
                 HScrollView(items: viewModel.cast) { cast in
                     CastCard(cast: cast)
+                }
+            case .similar:
+                MovieGridView(items: viewModel.similarMovies) { movie in
+                    MovieCard(movie: movie, type: .grid )
                 }
             }
         }

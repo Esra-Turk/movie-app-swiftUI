@@ -25,20 +25,22 @@ struct CustomImageView: View {
             }
         }()
         
-        KFImage(URL(string: imageUrl!))
-            .placeholder {
-                ZStack {
-                    Color.gray
-                    Text(movie.title)
-                        .foregroundColor(.white)
-                        .multilineTextAlignment(.center)
-                        .padding()
+        if let imageUrl = imageUrl, let url = URL(string: imageUrl) {
+            KFImage(url)
+                .placeholder {
+                    ZStack {
+                        Color.gray
+                        Text(movie.title)
+                            .foregroundColor(.white)
+                            .multilineTextAlignment(.center)
+                            .padding()
+                    }
                 }
-            }
-            .resizable()
-            .scaledToFill()
-            .frame(width: itemWidth, height: itemHeight)
-            .clipShape(RoundedRectangle(cornerRadius: 20))
+                .resizable()
+                .scaledToFill()
+                .frame(width: itemWidth, height: itemHeight)
+                .clipShape(RoundedRectangle(cornerRadius: 20))
+        }
     }
 }
 

@@ -10,13 +10,14 @@ import Foundation
 @MainActor
 class DetailsViewModel : ObservableObject {
     let movie : Movie
-    let sections : [DetailViewSection] = [.about,.review, .cast]
+    let sections : [DetailViewSection] = [.about,.review, .cast, .similar]
     @Published var selectedSection : DetailViewSection = .about
     @Published var reviews : [Review] = []
     @Published var genres : [Genre] = []
     @Published var movieGenre : Genre?
     @Published var movieVideo: [Video] = []
     @Published var cast : [Cast] = []
+    @Published var similarMovies : [Movie] = []
    
     private let movieService = MovieService()
     
@@ -62,6 +63,15 @@ class DetailsViewModel : ObservableObject {
         do {
             let response : CastResponse = try await movieService.fetchData(api: ApiConstructor(endpoint: .movieCredits(movie.id)))
             cast = response.cast
+        } catch {
+            print("Error : \(error.localizedDescription)")
+        }
+    }
+    
+    func getSimilarMovies() async {
+        do {
+            let response : MovieResponse = try await movieService.fetchData(api: ApiConstructor(endpoint: .similarMovies(movie.id)))
+            similarMovies = response.results
         } catch {
             print("Error : \(error.localizedDescription)")
         }
