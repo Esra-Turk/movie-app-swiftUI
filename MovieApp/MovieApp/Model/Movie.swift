@@ -53,15 +53,15 @@ struct Movie: Codable, Identifiable {
 
 extension Movie {
     var imageUrlString : String {
-        Constants.imageBaseURL + posterPath!
+        Constants.imageBaseURL + (posterPath ?? "")
     }
     
     var imageUrlBackdrop : String {
-        Constants.imageBaseURL + backdropPath!
+        Constants.imageBaseURL + (backdropPath ?? "")
     }
     
     var releaseYear : String {
-        String(releaseDate.split(separator: "-").first!)
+        String(releaseDate.split(separator: "-").first ?? "")
     }
     
     var voteMovie : String {

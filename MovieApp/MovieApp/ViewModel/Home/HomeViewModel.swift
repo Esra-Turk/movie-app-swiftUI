@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Combine
 
 @MainActor
 class HomeViewModel : ObservableObject {
@@ -17,6 +18,7 @@ class HomeViewModel : ObservableObject {
     @Published var errorMessage = ""
     @Published var selectedGenre = DeveloperPreview.instance.genre
     @Published var selectedMovie: Movie? = nil
+    @Published var searchedMovies: [Movie] = []
     
     private let movieService = MovieService()
     
@@ -72,6 +74,20 @@ class HomeViewModel : ObservableObject {
             print("Error fetching movies by genre: \(error)")
         }
 
+    }
+    
+    func searchMovie(query : String) async {
+        do {
+            let api = ApiConstructor(endpoint: .searchMovie, params: [
+                "query" : "\(query)"
+            ])
+            
+            let response : MovieResponse = try await movieService.fetchData(api: api)
+            searchedMovies = response.results
+            
+        } catch {
+            errorMessage = "Error: \(error)"
+        }
     }
     
 }

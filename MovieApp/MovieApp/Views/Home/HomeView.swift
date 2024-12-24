@@ -9,68 +9,84 @@ import SwiftUI
 
 struct HomeView: View {
     @State private var searchText = ""
+    @State private var showSearchResults = false
     @StateObject private var viewmodel = HomeViewModel()
     @Namespace var namespace
     
     
     var body: some View {
-        ScrollView(showsIndicators: false) {
-            LazyVStack(alignment: .leading, spacing: 20) {
-                HeaderView(title: "Movie App", size: 35)
-                SearchBar(searchText: $searchText)
-                
-                HeaderView(title: "Trending", size: 18)
-                HScrollView(items: viewmodel.trendingMovies) { movie in
-                    MovieCard(movie: movie)
-                        .onTapGesture {
-                            viewmodel.selectedMovie = movie
+        NavigationStack {
+            ScrollView(showsIndicators: false) {
+                LazyVStack(alignment: .leading, spacing: 20) {
+                    HeaderView(title: "Movie App", size: 35)
+                    
+                    SearchBar(searchText: $searchText)
+                        .onSubmit {
+                            Task {
+                                await viewmodel.searchMovie(query: searchText)
+                                showSearchResults = true
+                            }
                         }
+                    
+                    HeaderView(title: "Trending", size: 18)
+                    HScrollView(items: viewmodel.trendingMovies) { movie in
+                        MovieCard(movie: movie)
+                            .onTapGesture {
+                                viewmodel.selectedMovie = movie
+                            }
+                    }
+                    
+                    HeaderView(title: "Top Rated", size: 18)
+                    HScrollView(items: viewmodel.topRatedMovies) { movie in
+                        MovieCard(movie: movie)
+                            .onTapGesture {
+                                viewmodel.selectedMovie = movie
+                            }
+                    }
+                    
+                    HeaderView(title: "Now Playing", size: 18)
+                    HScrollView(items: viewmodel.nowPlayingMovies) { movie in
+                        MovieCard(movie: movie)
+                            .onTapGesture {
+                                viewmodel.selectedMovie = movie
+                            }
+                    }
+                    
+                    HScrollView(items: viewmodel.genreMovies) { genre in
+                        GenreCard(genre: genre, namespace: namespace, selectedGenre: $viewmodel.selectedGenre)
+                            .onTapGesture {
+                                handleGenreSelection(genre)
+                            }
+                    }
+                    
+                    //MovieGridView(movies: viewmodel.moviesByGenre)
+                    
+                    MovieGridView(items: viewmodel.moviesByGenre) { movie in
+                        MovieCard(movie: movie, type: .grid)
+                            .onTapGesture {
+                                viewmodel.selectedMovie = movie
+                            }
+                    }
+                    
+                    
+                    
                 }
-                
-                HeaderView(title: "Top Rated", size: 18)
-                HScrollView(items: viewmodel.topRatedMovies) { movie in
-                    MovieCard(movie: movie)
-                        .onTapGesture {
-                            viewmodel.selectedMovie = movie
-                        }
-                }
-                
-                HeaderView(title: "Now Playing", size: 18)
-                HScrollView(items: viewmodel.nowPlayingMovies) { movie in
-                    MovieCard(movie: movie)
-                        .onTapGesture {
-                            viewmodel.selectedMovie = movie
-                        }
-                }
-                
-                HScrollView(items: viewmodel.genreMovies) { genre in
-                    GenreCard(genre: genre, namespace: namespace, selectedGenre: $viewmodel.selectedGenre)
-                        .onTapGesture {
-                            handleGenreSelection(genre)
-                        }
-                }
-                
-                //MovieGridView(movies: viewmodel.moviesByGenre)
-                
-                MovieGridView(items: viewmodel.moviesByGenre) { movie in
-                    MovieCard(movie: movie, type: .grid)
-                        .onTapGesture {
-                            viewmodel.selectedMovie = movie
-                        }
-                }
-                
-               
-              
             }
-        }
-        .preferredColorScheme(.dark)
-        .padding()
-        .background(Color.background)
-        .fullScreenCover(item: $viewmodel.selectedMovie, content: { movie in
-            MovieDetailView(movie: movie)
-        })
-        .task {
-            await loadData()
+            .preferredColorScheme(.dark)
+            .padding()
+            .background(Color.background)
+            .fullScreenCover(item: $viewmodel.selectedMovie, content: { movie in
+                MovieDetailView(movie: movie)
+            })
+            .navigationDestination(isPresented: $showSearchResults) {
+                SearchResultView(viewModel: viewmodel)
+                    .onDisappear() {
+                        searchText = ""
+                    }
+            }
+            .task {
+                await loadData()
+            }
         }
     }
     

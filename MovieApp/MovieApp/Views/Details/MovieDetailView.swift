@@ -109,7 +109,7 @@ struct MovieDetailView: View {
         HStack {
             CustomImageView(movie: viewModel.movie, itemWidth: backdropImageHeight, itemHeight: backdropImageHeight, imageType: "backdrop")
             Text(viewModel.movie.title)
-                .font(.title3)
+                .font(.title2)
                 .fontWeight(.bold)
                 .minimumScaleFactor(0.5)
                 .padding(.top, titleOffset)
