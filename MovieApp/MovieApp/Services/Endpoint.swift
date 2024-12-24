@@ -8,7 +8,7 @@
 import Foundation
 
 enum Endpoint {
-    case trending, topRated, genre, nowplaying, movieReview(_ id: Int), discoverMovies, watchTrailer(_ id: Int), movieCredits(_ id: Int), similarMovies(_ id: Int)
+    case trending, topRated, genre, nowplaying, movieReview(_ id: Int), discoverMovies, watchTrailer(_ id: Int), movieCredits(_ id: Int), similarMovies(_ id: Int), searchMovie
     
     private var path : String {
         switch self {
@@ -21,6 +21,7 @@ enum Endpoint {
         case .watchTrailer(let id): return "/movie/\(id)/videos"
         case .movieCredits(let id): return "/movie/\(id)/credits"
         case .similarMovies(let id): return "/movie/\(id)/similar"
+        case .searchMovie: return "/search/movie"
         }
     }
     
