@@ -22,7 +22,7 @@ extension MovieCardType {
     
     var height : Double {
         switch self {
-        case .poster: return 0.225
+        case .poster: return 0.3
         case .grid: return 0.2
         }
     }

@@ -16,9 +16,10 @@ struct CastCard: View {
             } placeholder: {
                 Color.background
             }
-            .frame(width: 130, height: 140)
+            .frame(width: 120, height: 140)
             .aspectRatio(contentMode: .fill)
             .clipped()
+            .cornerRadius(12)
 
             
             VStack(alignment: .leading, spacing: 10) {

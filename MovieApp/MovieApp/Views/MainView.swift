@@ -13,8 +13,14 @@ struct MainView: View {
     
             HomeView()
                 .tabItem() {
-                    Label("Home", systemImage: "play.rectangle")
+                    Label("Home", systemImage: "square.grid.2x2")
                 }
+            
+            DiscoverView()
+                .tabItem {
+                    Label("Discover", systemImage: "play.rectangle")
+                }
+            
                
             FavoritesView()
                 .tabItem() {

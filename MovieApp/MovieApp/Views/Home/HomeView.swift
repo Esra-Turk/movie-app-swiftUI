@@ -11,8 +11,6 @@ struct HomeView: View {
     @State private var searchText = ""
     @State private var showSearchResults = false
     @StateObject private var viewmodel = HomeViewModel()
-    @Namespace var namespace
-    
     
     var body: some View {
         NavigationStack {
@@ -52,23 +50,6 @@ struct HomeView: View {
                             }
                     }
                     
-                    HScrollView(items: viewmodel.genreMovies) { genre in
-                        GenreCard(genre: genre, namespace: namespace, selectedGenre: $viewmodel.selectedGenre)
-                            .onTapGesture {
-                                handleGenreSelection(genre)
-                            }
-                    }
-                    
-                    //MovieGridView(movies: viewmodel.moviesByGenre)
-                    
-                    MovieGridView(items: viewmodel.moviesByGenre) { movie in
-                        MovieCard(movie: movie, type: .grid)
-                            .onTapGesture {
-                                viewmodel.selectedMovie = movie
-                            }
-                    }
-                    
-                    
                     
                 }
             }
@@ -90,21 +71,11 @@ struct HomeView: View {
         }
     }
     
-    private func handleGenreSelection(_ genre: Genre) {
-        withAnimation(.smooth) {
-            viewmodel.selectedGenre = genre
-            Task {
-                await viewmodel.fetchMoviesByGenre()
-            }
-        }
-    }
     
     private func loadData() async {
         await viewmodel.fetchTrendingMovies()
         await viewmodel.fetchTopRatedMovies()
         await viewmodel.fetchNowPlayingMovies()
-        await viewmodel.fetchGenreMovies()
-        await viewmodel.fetchMoviesByGenre()
     }
 }
 
