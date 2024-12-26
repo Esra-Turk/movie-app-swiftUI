@@ -16,6 +16,7 @@ enum DetailViewSection: String {
 
 struct MovieDetailView: View {
     @StateObject private var viewModel: DetailsViewModel
+    @StateObject private var favoriteViewModel: FavoritesViewModel = FavoritesViewModel()
     @Environment(\.presentationMode) var presentationMode
     @Environment(\.openURL) var openURL
     @Namespace private var namespace
@@ -92,7 +93,15 @@ struct MovieDetailView: View {
             Text("Detail")
             Spacer()
             Button(action: {
-                isLiked.toggle()
+                Task {
+                    if isLiked {
+                        await favoriteViewModel.removeFavorite(movieID: viewModel.movie.id)
+                    } else{
+                        await viewModel.addToFavorite()
+                    }
+                    isLiked.toggle()
+                }
+               
             }) {
                 Image(systemName: isLiked ? "heart.fill" : "heart")
                     .resizable()
