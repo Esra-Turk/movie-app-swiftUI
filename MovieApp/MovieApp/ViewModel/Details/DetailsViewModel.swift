@@ -76,6 +76,21 @@ class DetailsViewModel : ObservableObject {
             print("Error : \(error.localizedDescription)")
         }
     }
+    
+    func addToFavorite() async {
+        do {
+            let request = MediaRequest(mediaID: movie.id, mediaType: "movie", favorite: true)
+            let api = ApiConstructor(endpoint: .addFavoriteMovies, params: [
+                "session_id" : "\(Constants.sessionId)"
+            ])
+            
+            let response: MediaResponse = try await movieService.postData(api: api, requestBody: request)
+            print("Success: \(response.success), Message: \(response.statusMessage)")
+                   
+        } catch {
+            print("error : \(error.localizedDescription)")
+        }
+    }
 }
 
 extension DetailsViewModel {

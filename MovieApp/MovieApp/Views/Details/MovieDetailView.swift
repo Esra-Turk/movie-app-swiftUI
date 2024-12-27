@@ -92,7 +92,11 @@ struct MovieDetailView: View {
             Text("Detail")
             Spacer()
             Button(action: {
-                isLiked.toggle()
+                Task {
+                    await viewModel.addToFavorite()
+                    isLiked = true
+                }
+               
             }) {
                 Image(systemName: isLiked ? "heart.fill" : "heart")
                     .resizable()
