@@ -9,8 +9,14 @@ import Foundation
 
 @MainActor
 class FavoritesViewModel: ObservableObject {
-    @Published var favorites: [Movie] = []
+    @Published var selectedMovie: Movie? = nil
     private let movieService: MovieService = MovieService()
+    @Published var categorizedFavorites: [CategorizedMovies] = []
+    @Published var favorites: [Movie] = [] {
+        didSet {
+            genreFavorite()
+        }
+    }
 
     func getFavorites() async {
         do {
@@ -38,11 +44,28 @@ class FavoritesViewModel: ObservableObject {
             ])
             
             let response: MediaResponse = try await movieService.postData(api: api, requestBody: request)
-            print("Success: \(response.success), Message: \(response.statusMessage)")
+            
+            if response.success {
+                if let index = favorites.firstIndex(where: { $0.id == movieID }) {
+                    favorites.remove(at: index)
+                }
+            }
                    
         } catch {
             print("error : \(error.localizedDescription)")
         }
     }
     
+    
+    private func genreFavorite() {
+        let grouped = Dictionary(grouping: favorites) {
+            $0.genreIDS.first ?? 0
+        }
+
+        self.categorizedFavorites = grouped.map {
+            CategorizedMovies(genreId: $0.key, movies: $0.value)
+        }.sorted { $0.genreId < $1.genreId }
+    }
+
+
 }

@@ -51,6 +51,11 @@ struct Movie: Codable, Identifiable {
     }
 }
 
+struct CategorizedMovies {
+    let genreId: Int
+    let movies: [Movie]
+}
+
 extension Movie {
     var imageUrlString : String {
         Constants.imageBaseURL + (posterPath ?? "")
