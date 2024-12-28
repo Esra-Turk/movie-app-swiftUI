@@ -79,7 +79,7 @@ class DetailsViewModel : ObservableObject {
     
     func addToFavorite() async {
         do {
-            let request = MediaRequest(mediaID: movie.id, mediaType: "movie", favorite: true)
+            let request = FavoriteRequest(mediaID: movie.id, mediaType: "movie", favorite: true)
             let api = ApiConstructor(endpoint: .addFavoriteMovies, params: [
                 "session_id" : "\(Constants.sessionId)"
             ])

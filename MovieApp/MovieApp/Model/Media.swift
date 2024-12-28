@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct MediaRequest: Codable {
+struct FavoriteRequest: Codable {
     let mediaID: Int
     let mediaType: String
     let favorite: Bool
@@ -16,6 +16,18 @@ struct MediaRequest: Codable {
         case mediaID = "media_id"
         case mediaType = "media_type"
         case favorite
+    }
+}
+
+struct WatchlistRequest: Codable {
+    let mediaID: Int
+    let mediaType: String
+    let watchlist: Bool
+    
+    enum CodingKeys: String, CodingKey {
+        case mediaID = "media_id"
+        case mediaType = "media_type"
+        case watchlist
     }
 }
 

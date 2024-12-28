@@ -38,7 +38,7 @@ class FavoritesViewModel: ObservableObject {
     
    func removeFavorite(movieID: Int) async {
         do {
-            let request = MediaRequest(mediaID: movieID, mediaType: "movie", favorite: false)
+            let request = FavoriteRequest(mediaID: movieID, mediaType: "movie", favorite: false)
             let api = ApiConstructor(endpoint: .addFavoriteMovies, params: [
                 "session_id" : "\(Constants.sessionId)"
             ])
