@@ -18,7 +18,7 @@ struct WatchlistView: View {
                 HStack {
                     HeaderView(title: "Movies", size: 25)
                     Spacer()
-                    FilterMenu()
+                    FilterMenu(watchListVM: watchlistViewmodel)
                 }
                 .padding(.horizontal,10)
                 

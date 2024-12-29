@@ -49,6 +49,18 @@ class WatchlistViewModel : ObservableObject {
             print("Error: \(error.localizedDescription)")
         }
     }
-
     
+    func filterByPopularity() {
+        watchlistMovies.sort { $0.popularity > $1.popularity }
+        
+    }
+    
+    func filterByVote() {
+        watchlistMovies.sort { $0.voteAverage > $1.voteAverage }
+        
+    }
+    
+    func filterByReleaseDate() {
+        watchlistMovies.sort { $0.releaseDate < $1.releaseDate }
+    }
 }

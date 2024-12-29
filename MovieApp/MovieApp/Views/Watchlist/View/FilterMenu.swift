@@ -9,6 +9,7 @@ import SwiftUI
 
 struct FilterMenu: View {
     @State private var selectedFilter: String = "Popularity"
+    @StateObject var watchListVM: WatchlistViewModel
 
     var body: some View {
         HStack {
@@ -16,10 +17,21 @@ struct FilterMenu: View {
                 .poppins("Poppins-Regular",18)
             
             Menu {
-                Button ("Popularity", action: { selectedFilter = "Popularity" })
-                Button("Upcoming", action: { selectedFilter = "Upcoming" })
-                Button("Added Date", action: { selectedFilter = "Added Date" })
-                Button("Release Date", action: { selectedFilter = "Release Date" })
+                Button ("Popularity", action: {
+                    selectedFilter = "Popularity"
+                    watchListVM.filterByPopularity()
+                })
+                
+                Button("Vote Avarage", action: {
+                    selectedFilter = "Vote"
+                    watchListVM.filterByVote()
+                })
+                
+                Button("Release Date", action: {
+                    selectedFilter = "Release"
+                    watchListVM.filterByReleaseDate()
+                })
+                
             } label: {
                 HStack {
                     Text(selectedFilter)
@@ -35,6 +47,3 @@ struct FilterMenu: View {
     }
 }
 
-#Preview {
-    FilterMenu()
-}

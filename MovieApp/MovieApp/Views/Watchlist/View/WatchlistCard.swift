@@ -40,7 +40,7 @@ struct WatchlistCard:  View {
 
     private var movieTitle: some View {
         Text(movie.title)
-            .poppins("Poppins-Bold", 22)
+            .poppins("Poppins-Bold", 20)
             .foregroundColor(.white)
     }
 
