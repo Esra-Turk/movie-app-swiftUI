@@ -9,7 +9,8 @@ import Foundation
 
 enum Endpoint {
     case trending, topRated, genre, nowplaying, movieReview(_ id: Int), discoverMovies,
-         watchTrailer(_ id: Int), movieCredits(_ id: Int), similarMovies(_ id: Int), searchMovie, addFavoriteMovies, getFavoriteMovies
+         watchTrailer(_ id: Int), movieCredits(_ id: Int), similarMovies(_ id: Int), searchMovie, addFavoriteMovies, getFavoriteMovies,
+        addMovieToWatchList, getMovieFromWatchList
     
     private var path : String {
         switch self {
@@ -25,6 +26,8 @@ enum Endpoint {
         case .searchMovie: return "/search/movie"
         case .addFavoriteMovies: return "/account/\(Constants.accountId)/favorite"
         case .getFavoriteMovies: return "/account/\(Constants.accountId)/favorite/movies"
+        case .addMovieToWatchList: return "/account/\(Constants.accountId)/watchlist"
+        case .getMovieFromWatchList: return "/account/\(Constants.accountId)/watchlist/movies"
         }
     }
     

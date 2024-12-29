@@ -20,6 +20,8 @@ struct MovieDetailView: View {
     @Environment(\.openURL) var openURL
     @Namespace private var namespace
     @State private var isLiked: Bool = false
+    @State private var isOnList : Bool = false
+    private var watchlistViewModel: WatchlistViewModel = WatchlistViewModel()
     
     init(movie: Movie) {
         _viewModel = StateObject(wrappedValue: DetailsViewModel(movie: movie))
@@ -136,6 +138,17 @@ struct MovieDetailView: View {
             iconText(icon: "Star", text: "\(viewModel.movie.voteMovie) (IMDb)")
             separator
             iconText(icon: "GenreIcon", text: viewModel.movieGenre?.name ?? "No genre")
+            Button {
+                Task {
+                    await watchlistViewModel.updateWatchlist(movie: viewModel.movie, addToWatchlist: true)
+                }
+                isOnList = true
+              
+            } label: {
+                Image(isOnList ? "BookmarkIcon": "bookmark")
+                    .frame(alignment: .leading)
+                    .offset(x : 10)
+            }
         }
         .frame(maxWidth: .infinity)
     }
